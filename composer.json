@@ -1,0 +1,34 @@
+{
+  "name": "vyuldashev/cards",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Vladimir Yuldashev",
+      "email": "misterio92@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "spatie/regex": "^1.2",
+    "ext-mbstring": "*",
+    "nesbot/carbon": "^1.22"
+  },
+  "autoload": {
+    "psr-4": {
+      "Vyuldashev\\Cards\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Vyuldashev\\Cards\\Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require-dev": {
+    "phpunit/phpunit": "^6.3",
+    "fzaninotto/faker": "^1.7",
+    "larapack/dd": "^1.1"
+  }
+}
