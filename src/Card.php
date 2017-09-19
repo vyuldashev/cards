@@ -50,6 +50,11 @@ abstract class Card
         return null;
     }
 
+    public static function validate(string $pan): bool
+    {
+        return Luhn::check($pan);
+    }
+
     private function __construct(
         int $type,
         string $pan,
@@ -64,36 +69,75 @@ abstract class Card
         $this->cvv = $cvv;
     }
 
+    /**
+     * Get card type.
+     *
+     * @return int
+     */
     public function getType(): int
     {
         return $this->type;
     }
 
+    /**
+     * Get PAN.
+     *
+     * @return string
+     */
     public function getPan(): string
     {
         return $this->pan;
     }
 
+    /**
+     * Get card expiration month.
+     *
+     * @return int|null
+     */
     public function getExpirationMonth(): ?int
     {
         return $this->expirationMonth;
     }
 
+    /**
+     * Get card expiration year.
+     *
+     * @return int|null
+     */
     public function getExpirationYear(): ?int
     {
         return $this->expirationYear;
     }
 
+    /**
+     * Get CVV.
+     *
+     * @return int|null
+     */
     public function getCvv(): ?int
     {
         return $this->cvv;
     }
 
+    /**
+     * Get BIN number.
+     *
+     * @return string
+     */
     public function getBin(): string
     {
         return mb_substr($this->pan, 0, 6);
     }
 
+    /**
+     * Get masked pan.
+     *
+     * @param int $startDigits
+     * @param int $endDigits
+     * @param string $masker
+     *
+     * @return string
+     */
     public function getMaskedPan(int $startDigits = 6, int $endDigits = 4, string $masker = '*'): string
     {
         $masked = mb_strlen($this->pan) - $startDigits - $endDigits;
@@ -104,13 +148,28 @@ abstract class Card
             mb_substr($this->pan, $endDigits * -1);
     }
 
-    public function passesLuhn(): bool
+    /**
+     * Determine if card is valid.
+     *
+     * @return bool
+     */
+    public function valid(): bool
     {
         return Luhn::check($this->pan);
     }
 
+    /**
+     * Determine if card has been expired.
+     *
+     * @return bool
+     */
     public function expired(): bool
     {
         return !Carbon::createFromDate($this->expirationYear, $this->expirationMonth, 1)->isFuture();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getMaskedPan();
     }
 }

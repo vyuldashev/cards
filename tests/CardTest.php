@@ -30,6 +30,7 @@ class CardTest extends TestCase
         $this->assertSame(123, $card->getCvv());
         $this->assertSame('491608', $card->getBin());
         $this->assertSame('491608******5045', $card->getMaskedPan());
+        $this->assertSame('491608******5045', (string)$card);
 
         // MasterCard
         $card = Card::create($mastercard, 9, 2055, 321);
@@ -44,12 +45,20 @@ class CardTest extends TestCase
         $this->assertSame(321, $card->getCvv());
         $this->assertSame('525836', $card->getBin());
         $this->assertSame('525836******2716', $card->getMaskedPan());
+        $this->assertSame('525836******2716', (string)$card);
 
         // Misc
-        $this->assertTrue(Card::create($visa)->passesLuhn());
-        $this->assertTrue(Card::create($mastercard)->passesLuhn());
-        $this->assertFalse(Card::create('4222222222222222')->passesLuhn());
+        $this->assertTrue(Card::create($visa)->valid());
+        $this->assertTrue(Card::create($mastercard)->valid());
+        $this->assertFalse(Card::create('4222222222222222')->valid());
         $this->assertFalse(Card::create($visa, Carbon::now()->addMonth()->month, Carbon::now()->year)->expired());
         $this->assertTrue(Card::create($visa, Carbon::now()->subMonth()->month, Carbon::now()->year)->expired());
+    }
+
+    public function testValidate(): void
+    {
+        $this->assertTrue(Card::validate('4916080075115045'));
+        $this->assertTrue(Card::validate('5258369670492716'));
+        $this->assertFalse(Card::validate('4222222222222222'));
     }
 }
