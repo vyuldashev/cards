@@ -34,7 +34,8 @@ abstract class Card
         int $expirationMonth = null,
         int $expirationYear = null,
         int $cvv = null
-    ): Card {
+    ): ?Card
+    {
         $pan = str_replace(' ', '', $pan);
 
         foreach (self::$types as $type => $data) {
