@@ -10,19 +10,19 @@
   ],
   "require": {
     "php": ">=7.1",
-    "spatie/regex": "^1.2",
     "ext-mbstring": "*",
+    "spatie/regex": "^1.2",
     "nesbot/carbon": "^1.22"
-  },
-  "autoload": {
-    "psr-4": {
-      "Vyuldashev\\Cards\\": "src/"
-    }
   },
   "require-dev": {
     "phpunit/phpunit": "^6.3",
     "fzaninotto/faker": "^1.7",
     "larapack/dd": "^1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Vyuldashev\\Cards\\": "src/"
+    }
   },
   "autoload-dev": {
     "psr-4": {
