@@ -12,9 +12,19 @@ use Vyuldashev\Cards\Visa;
 
 class CardTest extends TestCase
 {
+    public function testCreateNoDigits(): void
+    {
+        $this->assertNull(Card::create('----'));
+    }
+
     public function testCreateWithNotNumericalCharacters(): void
     {
         $this->assertInstanceOf(Card::class, Card::create('4916-0800-7511-5045'));
+    }
+
+    public function testCreateNoMatchedType(): void
+    {
+        $this->assertNull(Card::create(str_repeat('8', 16)));
     }
 
     public function testCreate(): void
