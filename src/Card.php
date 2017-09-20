@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace Vyuldashev\Cards;
 
+use Serializable;
 use Carbon\Carbon;
 use JsonSerializable;
 use RuntimeException;
 use Spatie\Regex\Regex;
 use Vyuldashev\Cards\Exceptions\InvalidPanException;
 
-abstract class Card implements Contracts\Card, JsonSerializable
+abstract class Card implements Contracts\Card, JsonSerializable, Serializable
 {
     public const TYPE_UNKNOWN = 0;
     public const TYPE_VISA = 1;
     public const TYPE_MASTERCARD = 2;
+    public const TYPE_AMERICAN_EXPRESS = 3;
+    public const TYPE_DINERS_CLUB = 4;
+    public const TYPE_DISCOVER = 5;
+    public const TYPE_JCB = 6;
 
     protected $type;
     protected $pan;
@@ -30,6 +35,22 @@ abstract class Card implements Contracts\Card, JsonSerializable
         self::TYPE_MASTERCARD => [
             'class' => MasterCard::class,
             'pattern' => '^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$',
+        ],
+        self::TYPE_AMERICAN_EXPRESS => [
+            'class' => AmericanExpress::class,
+            'pattern' => '^3[47][0-9]{13}$',
+        ],
+        self::TYPE_DINERS_CLUB => [
+            'class' => DinersClub::class,
+            'pattern' => '^3(?:0[0-5]|[68][0-9])[0-9]{11}$',
+        ],
+        self::TYPE_DISCOVER => [
+            'class' => Discover::class,
+            'pattern' => '^6(?:011|5[0-9]{2})[0-9]{12}$',
+        ],
+        self::TYPE_JCB => [
+            'class' => JCB::class,
+            'pattern' => '^(3(?:088|096|112|158|337|5(?:2[89]|[3-8][0-9]))\d{12})$',
         ],
     ];
 
@@ -135,6 +156,10 @@ abstract class Card implements Contracts\Card, JsonSerializable
      */
     public function getCvv(): ?int
     {
+        if (is_string($this->cvv)) {
+            return null;
+        }
+
         return $this->cvv;
     }
 
@@ -223,6 +248,28 @@ abstract class Card implements Contracts\Card, JsonSerializable
             'expiration_year' => $this->expirationYear,
             'cvv' => $this->getMaskedCvv(),
         ];
+    }
+
+    /**
+     * String representation of object.
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize(): string
+    {
+        return json_encode($this->jsonSerialize());
+    }
+
+    public function unserialize($serialized): void
+    {
+        $json = json_decode($serialized, true);
+
+        $this->type = $json['type'];
+        $this->pan = $json['pan'];
+        $this->expirationMonth = $json['expiration_month'];
+        $this->expirationYear = $json['expiration_year'];
+        $this->cvv = $json['cvv'];
     }
 
     private static function cleanPan(string $pan): string
