@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Vyuldashev\Cards\Tests;
 
 use GuzzleHttp\Client;
+use Vyuldashev\Cards\Card;
 use PHPUnit\Framework\TestCase;
 use Vyuldashev\Cards\BinListBinRepository;
-use Vyuldashev\Cards\Card;
 
 class BinListBinRepositoryTest extends TestCase
 {

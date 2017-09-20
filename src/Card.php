@@ -51,13 +51,13 @@ abstract class Card implements Contracts\Card, JsonSerializable
         int $cvv = null
     ): Card {
         if (self::cleanPan($pan) === '') {
-            throw new InvalidPanException('Pan "' . $pan . '" is invalid.');
+            throw new InvalidPanException('Pan "'.$pan.'" is invalid.');
         }
 
         $pan = self::cleanPan($pan);
 
         foreach (self::$types as $type => $data) {
-            $regex = Regex::match('/' . $data['pattern'] . '/', $pan);
+            $regex = Regex::match('/'.$data['pattern'].'/', $pan);
 
             if (!$regex->hasMatch()) {
                 continue;
@@ -162,8 +162,8 @@ abstract class Card implements Contracts\Card, JsonSerializable
         $masked = mb_strlen($this->pan) - $startDigits - $endDigits;
 
         return
-            mb_substr($this->pan, 0, $startDigits) .
-            str_repeat($masker, $masked) .
+            mb_substr($this->pan, 0, $startDigits).
+            str_repeat($masker, $masked).
             mb_substr($this->pan, $endDigits * -1);
     }
 
@@ -180,7 +180,7 @@ abstract class Card implements Contracts\Card, JsonSerializable
             return null;
         }
 
-        return str_repeat($masker, mb_strlen((string)$this->cvv));
+        return str_repeat($masker, mb_strlen((string) $this->cvv));
     }
 
     /**
