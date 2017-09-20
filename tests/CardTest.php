@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Vyuldashev\Cards\Tests;
 
 use Carbon\Carbon;
-use PHPUnit\Framework\TestCase;
 use Vyuldashev\Cards\Card;
-use Vyuldashev\Cards\Exceptions\InvalidPanException;
-use Vyuldashev\Cards\MasterCard;
-use Vyuldashev\Cards\Unknown;
 use Vyuldashev\Cards\Visa;
+use Vyuldashev\Cards\Unknown;
+use PHPUnit\Framework\TestCase;
+use Vyuldashev\Cards\MasterCard;
+use Vyuldashev\Cards\Exceptions\InvalidPanException;
 
 class CardTest extends TestCase
 {
@@ -48,7 +48,8 @@ class CardTest extends TestCase
         $this->assertSame(123, $card->getCvv());
         $this->assertSame('491608', $card->getBin());
         $this->assertSame('491608******5045', $card->getMaskedPan());
-        $this->assertSame('491608******5045', (string)$card);
+        $this->assertSame('491608******5045', (string) $card);
+        $this->assertSame('***', $card->getMaskedCvv());
         $this->assertTrue($card->valid());
         $this->assertFalse(Card::create($pan, Carbon::now()->addMonth()->month, Carbon::now()->year)->expired());
         $this->assertTrue(Card::create($pan, Carbon::now()->subMonth()->month, Carbon::now()->year)->expired());
@@ -70,7 +71,7 @@ class CardTest extends TestCase
         $this->assertSame(321, $card->getCvv());
         $this->assertSame('525836', $card->getBin());
         $this->assertSame('525836******2716', $card->getMaskedPan());
-        $this->assertSame('525836******2716', (string)$card);
+        $this->assertSame('525836******2716', (string) $card);
         $this->assertTrue($card->valid());
         $this->assertFalse(Card::create($pan, Carbon::now()->addMonth()->month, Carbon::now()->year)->expired());
         $this->assertTrue(Card::create($pan, Carbon::now()->subMonth()->month, Carbon::now()->year)->expired());
@@ -81,5 +82,20 @@ class CardTest extends TestCase
         $this->assertTrue(Card::validate('4916080075115045'));
         $this->assertTrue(Card::validate('5258369670492716'));
         $this->assertFalse(Card::validate('4222222222222222'));
+    }
+
+    public function testSerialize(): void
+    {
+        $card = Card::create('4916080075115045', 5, 2053, 123);
+
+        $expected = [
+            'type' => 1,
+            'pan' => '491608******5045',
+            'expiration_month' => 5,
+            'expiration_year' => 2053,
+            'cvv' => '***',
+        ];
+
+        $this->assertSame($expected, json_decode(json_encode($card), true));
     }
 }

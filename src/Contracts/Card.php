@@ -60,6 +60,15 @@ interface Card
     public function getMaskedPan(int $startDigits = 6, int $endDigits = 4, string $masker = '*'): string;
 
     /**
+     * Get masked cvv.
+     *
+     * @param string $masker
+     *
+     * @return string|null
+     */
+    public function getMaskedCvv(string $masker = '*'): ?string;
+
+    /**
      * Determine if pan is valid.
      *
      * @return bool

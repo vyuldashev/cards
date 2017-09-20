@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Vyuldashev\Cards;
 
 use Carbon\Carbon;
+use JsonSerializable;
 use RuntimeException;
 use Spatie\Regex\Regex;
 use Vyuldashev\Cards\Exceptions\InvalidPanException;
 
-abstract class Card implements Contracts\Card
+abstract class Card implements Contracts\Card, JsonSerializable
 {
     public const TYPE_UNKNOWN = 0;
     public const TYPE_VISA = 1;
@@ -167,6 +168,22 @@ abstract class Card implements Contracts\Card
     }
 
     /**
+     * Get masked cvv.
+     *
+     * @param string $masker
+     *
+     * @return string|null
+     */
+    public function getMaskedCvv(string $masker = '*'): ?string
+    {
+        if ($this->cvv === null) {
+            return null;
+        }
+
+        return str_repeat($masker, mb_strlen((string)$this->cvv));
+    }
+
+    /**
      * Determine if pan is valid.
      *
      * @return bool
@@ -195,6 +212,17 @@ abstract class Card implements Contracts\Card
     public function __toString(): string
     {
         return $this->getMaskedPan();
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'type' => $this->type,
+            'pan' => $this->getMaskedPan(),
+            'expiration_month' => $this->expirationMonth,
+            'expiration_year' => $this->expirationYear,
+            'cvv' => $this->getMaskedCvv(),
+        ];
     }
 
     private static function cleanPan(string $pan): string
