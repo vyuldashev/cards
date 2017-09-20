@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Vyuldashev\Cards;
 
 use Carbon\Carbon;
+use RuntimeException;
 use Spatie\Regex\Regex;
 use Vyuldashev\Cards\Exceptions\InvalidPanException;
 
-abstract class Card
+abstract class Card implements Contracts\Card
 {
     public const TYPE_UNKNOWN = 0;
     public const TYPE_VISA = 1;
@@ -166,7 +167,7 @@ abstract class Card
     }
 
     /**
-     * Determine if card is valid.
+     * Determine if pan is valid.
      *
      * @return bool
      */
@@ -179,9 +180,15 @@ abstract class Card
      * Determine if card has been expired.
      *
      * @return bool
+     *
+     * @throws RuntimeException
      */
     public function expired(): bool
     {
+        if ($this->expirationYear === null || $this->expirationMonth === null) {
+            throw new RuntimeException('Card expiration data should be filled.');
+        }
+
         return !Carbon::createFromDate($this->expirationYear, $this->expirationMonth, 1)->isFuture();
     }
 
