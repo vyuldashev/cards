@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Vyuldashev\Cards;
 
-class DinersClub extends Card
+final class DinersClub extends Card
 {
 }
