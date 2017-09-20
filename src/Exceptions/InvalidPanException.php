@@ -6,6 +6,6 @@ namespace Vyuldashev\Cards\Exceptions;
 
 use Exception;
 
-class InvalidPanException extends Exception
+final class InvalidPanException extends Exception
 {
 }

@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Vyuldashev\Cards;
 
-class Unknown extends Card
+final class Unknown extends Card
 {
 }

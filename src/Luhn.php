@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Vyuldashev\Cards;
 
-class Luhn
+final class Luhn
 {
     public static function check(string $number): bool
     {
