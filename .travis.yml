@@ -1,0 +1,16 @@
+language: php
+
+php:
+  - 7.1
+  - nightly
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_script:
+  - COMPOSER_DISCARD_CHANGES=1 composer update --prefer-dist --no-interaction --no-progress --no-suggest
+script:
+  - composer test

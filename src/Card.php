@@ -6,9 +6,11 @@ namespace Vyuldashev\Cards;
 
 use Carbon\Carbon;
 use Spatie\Regex\Regex;
+use Vyuldashev\Cards\Exceptions\InvalidPanException;
 
 abstract class Card
 {
+    public const TYPE_UNKNOWN = 0;
     public const TYPE_VISA = 1;
     public const TYPE_MASTERCARD = 2;
 
@@ -29,20 +31,28 @@ abstract class Card
         ],
     ];
 
+    /**
+     * Create a new Card instance.
+     *
+     * @param string $pan
+     * @param int|null $expirationMonth
+     * @param int|null $expirationYear
+     * @param int|null $cvv
+     *
+     * @return Card
+     * @throws InvalidPanException
+     */
     public static function create(
         string $pan,
         int $expirationMonth = null,
         int $expirationYear = null,
         int $cvv = null
-    ): ?Card
-    {
-        $pan = Regex::replace('/[^0-9]/', '', $pan);
-
-        if ($pan->result() === '') {
-            return null;
+    ): Card {
+        if (self::cleanPan($pan) === '') {
+            throw new InvalidPanException('Pan "' . $pan . '" is invalid.');
         }
 
-        $pan = $pan->result();
+        $pan = self::cleanPan($pan);
 
         foreach (self::$types as $type => $data) {
             $regex = Regex::match('/' . $data['pattern'] . '/', $pan);
@@ -54,7 +64,7 @@ abstract class Card
             return new $data['class']($type, $pan, $expirationMonth, $expirationYear, $cvv);
         }
 
-        return null;
+        return new Unknown(self::TYPE_UNKNOWN, $pan, $expirationMonth, $expirationYear, $cvv);
     }
 
     public static function validate(string $pan): bool
@@ -178,5 +188,10 @@ abstract class Card
     public function __toString(): string
     {
         return $this->getMaskedPan();
+    }
+
+    private static function cleanPan(string $pan): string
+    {
+        return Regex::replace('/[^0-9]/', '', $pan)->result();
     }
 }

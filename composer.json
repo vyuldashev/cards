@@ -29,6 +29,9 @@
       "Vyuldashev\\Cards\\Tests\\": "tests/"
     }
   },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
   "minimum-stability": "dev",
   "prefer-stable": true
 }
