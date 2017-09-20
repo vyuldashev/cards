@@ -12,6 +12,11 @@ use Vyuldashev\Cards\Visa;
 
 class CardTest extends TestCase
 {
+    public function testCreateWithNotNumericalCharacters(): void
+    {
+        $this->assertInstanceOf(Card::class, Card::create('4916-0800-7511-5045'));
+    }
+
     public function testCreate(): void
     {
         $visa = '4916080075115045';

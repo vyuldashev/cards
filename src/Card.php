@@ -36,7 +36,13 @@ abstract class Card
         int $cvv = null
     ): ?Card
     {
-        $pan = str_replace(' ', '', $pan);
+        $pan = Regex::replace('/[^0-9]/', '', $pan);
+
+        if ($pan->result() === '') {
+            return null;
+        }
+
+        $pan = $pan->result();
 
         foreach (self::$types as $type => $data) {
             $regex = Regex::match('/' . $data['pattern'] . '/', $pan);
