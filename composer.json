@@ -32,6 +32,11 @@
   "scripts": {
     "test": "vendor/bin/phpunit"
   },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.0-dev"
+    }
+  },
   "minimum-stability": "dev",
   "prefer-stable": true
 }
