@@ -13,8 +13,8 @@ composer require vyuldashev/cards
 ```php
 use Vyuldashev\Cards\Card;
 
-Card::create('4916080075115045'); // Visa
-Card::create('5258369670492716'); // MasterCard
+Card::create('4916080075115045'); // Vyuldashev\Cards\Visa::class
+Card::create('5258369670492716'); // Vyuldashev\Cards\MasterCard::class
 ```
 
 Pan may also contain non-numeric characters, method `create` will remove these characters itself.
