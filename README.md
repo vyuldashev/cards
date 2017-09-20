@@ -1,5 +1,8 @@
 # Cards
 
+This package provides an API for bank cards. Card object is a value object and cannot be modified.
+Also, this package takes care of secure serialization and deserialization of card information and provides an API for bin data information retrieval.
+
 ## Installation
 
 You can install the package via composer:

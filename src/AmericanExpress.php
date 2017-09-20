@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Vyuldashev\Cards;
 
-class AmericanExpress extends Card
+final class AmericanExpress extends Card
 {
 }
